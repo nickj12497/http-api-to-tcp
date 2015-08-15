@@ -1,30 +1,39 @@
 (function() {
-  var net, server, status;
+  var net, server;
 
   net = require('net');
 
-  status = '';
-
   server = net.createServer(function(socket) {
     console.log('Client Connected...');
-    return socket.on('data', function(data) {
-      console.log(data.toString());
-      if (data.toString().trim().toLowerCase() === 'play') {
-        status = 'Playing';
-        console.log('PLAY\x1F\r\n');
-        return socket.write('STATUS: \x1FPlaying \x1F00:00:00\x1F-00:21:22\r\nTITLE: \x1FBojack Horseman\x1F\r\n');
-      } else if (data.toString().trim().toLowerCase() === 'pause') {
-        return socket.write('STATUS: \x1FPaused \x1F at 00:14:52\x1F-00:21:22\r\nTITLE: \x1FBojack Horseman\x1F\r\n');
-      } else if (data.toString().trim().toLowerCase() === 'stop') {
-        return socket.write('STATUS: \x1FStopped\r\nReturning to Main Menu\x1F\r\n');
-      } else if (data.toString().trim().toLowerCase() === 'exit' || 'goodbye') {
-        socket.write('Diconnecting now...\r\n');
-        return socket.destroy();
+    socket.on('data', function(data) {
+      var text;
+      text = data.toString().trim().toLowerCase();
+      console.log(text);
+      switch (text) {
+        case 'play':
+          return socket.write('STATUS: \x1FPlaying \x1F00:00:00\x1F-00:21:22\r\nTITLE: \x1FBojack Horseman\x1F\r\n');
+        case 'pause':
+          return socket.write('STATUS: \x1FPaused \x1F at 00:14:52\x1F-00:21:22\r\nTITLE: \x1FBojack Horseman\x1F\r\n');
+        case 'stop':
+          return socket.write('STATUS: \x1FStopped\r\nReturning to Main Menu\x1F\r\n');
+        case 'exit':
+        case 'goodbye':
+        case 'quit':
+        case '����':
+          socket.write('Diconnecting now...\r\n');
+          return socket.destroy();
+        default:
+          return socket.write("Invalid command. Valid commands: 'Play', 'Pause', 'Stop', and 'Exit'/'Goodbye'.\r\n");
       }
+    });
+    return process.on('SIGINT', function() {
+      socket.close();
+      process.exit();
+      return socket.destroy();
     });
   });
 
-  server.listen(50000, "162.198.129.216", function() {
+  server.listen(50000, '162.198.129.216', function() {
     return console.log('Server started...');
   });
 
