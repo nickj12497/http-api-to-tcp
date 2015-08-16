@@ -20,7 +20,6 @@
         case 'exit':
         case 'goodbye':
         case 'quit':
-        case '^C':
           socket.write('Diconnecting now...\r\n');
           return socket.destroy();
         default:
