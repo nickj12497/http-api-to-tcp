@@ -2,6 +2,7 @@ net = require('net')
 
 server = net.createServer (socket) ->
   console.log 'Client Connected...'
+  socket.write('Connection Established\r\n')
 
   socket.on 'data', (data) ->
     text = data.toString().trim().toLowerCase()
@@ -13,7 +14,7 @@ server = net.createServer (socket) ->
         socket.write 'STATUS: \x1FPaused \x1F at 00:14:52\x1F-00:21:22\r\nTITLE: \x1FBojack Horseman\x1F\r\n'
       when 'stop'
         socket.write 'STATUS: \x1FStopped\r\nReturning to Main Menu\x1F\r\n'
-      when 'exit', 'goodbye', 'quit', '����'
+      when 'exit', 'goodbye', 'quit', '^C'
         socket.write 'Diconnecting now...\r\n'
         socket.destroy()
       else 
@@ -24,5 +25,5 @@ server = net.createServer (socket) ->
     process.exit()
     socket.destroy()
 
-server.listen 50000, '162.198.129.216', ->
+server.listen 50000, '', ->
   console.log 'Server started...'

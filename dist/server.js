@@ -5,6 +5,7 @@
 
   server = net.createServer(function(socket) {
     console.log('Client Connected...');
+    socket.write('Connection Established\r\n');
     socket.on('data', function(data) {
       var text;
       text = data.toString().trim().toLowerCase();
@@ -19,7 +20,7 @@
         case 'exit':
         case 'goodbye':
         case 'quit':
-        case '����':
+        case '^C':
           socket.write('Diconnecting now...\r\n');
           return socket.destroy();
         default:
@@ -33,7 +34,7 @@
     });
   });
 
-  server.listen(50000, '162.198.129.216', function() {
+  server.listen(50000, '', function() {
     return console.log('Server started...');
   });
 
