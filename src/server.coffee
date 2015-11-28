@@ -1,11 +1,7 @@
-# Notes
-# Following Ruby/CoffeeScript convention, use two spaces instead of tabs.
-# Do not use parentheses unless they are required.
-# Do not use double quotes unless the string uses interpolation.
-# Organize code classically for greater maintainability.
+# Dependencies
+net = require 'net'
 
-net = require('net')
-
+# Server
 class Server
   constructor: ->
     @server = net.createServer (client) ->
@@ -13,7 +9,7 @@ class Server
 
   listen: =>
     # FIXME: accept variable host and port
-    @server.listen 50000, '162.198.129.216', ->
+    @server.listen 50000, ->
       console.log 'Server started...'
 
   stop: =>
